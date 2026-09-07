@@ -7,47 +7,39 @@ import PageHeader from "@/components/ui/PageHeader";
 import DepartmentForm from "@/components/forms/DepartmentForm";
 
 interface Props {
-  params: Promise<{ id: string }>;
+   params: Promise<{ id: string }>;
 }
 
 export default async function EditDepartmentPage({ params }: Props) {
-  await requireManager();
-  const { id } = await params;
+   await requireManager();
+   const { id } = await params;
 
-  const department = await prisma.department.findUnique({
-    where: { id: parseInt(id) },
-  });
+   const department = await prisma.department.findUnique({
+      where: { id: parseInt(id) },
+   });
 
-  if (!department) notFound();
+   if (!department) notFound();
 
-  return (
-    <div>
-      <PageHeader
-        title={`ویرایش دپارتمان ${department.name}`}
-        subtitle="مشخصات دپارتمان را بروزرسانی کنید"
-        icon="fa-solid fa-building-pen"
-      />
+   return (
+      <div>
+         <PageHeader title={`ویرایش دپارتمان ${department.name}`} subtitle="مشخصات دپارتمان را بروزرسانی کنید" icon="fa-solid fa-building-pen" />
 
-      <Card className="max-w-2xl">
-        <CardHeader
-          title="ویرایش دپارتمان"
-          subtitle="نیازهای خود را تغییر دهید و ذخیره کنید"
-          icon="fa-solid fa-clipboard-list"
-        />
-        <CardBody>
-          <DepartmentForm
-            initialData={{
-              id: department.id,
-              name: department.name,
-              description: department.description,
-              managerName: department.managerName,
-              phone: department.phone,
-              email: department.email,
-              isActive: department.isActive,
-            }}
-          />
-        </CardBody>
-      </Card>
-    </div>
-  );
+         <Card className="max-w-2xl">
+            <CardHeader title="ویرایش دپارتمان" subtitle="نیازهای خود را تغییر دهید و ذخیره کنید" icon="fa-solid fa-clipboard-list" />
+            <CardBody>
+               <DepartmentForm
+                  initialData={{
+                     id: department.id,
+                     name: department.name,
+                     description: department.description,
+                     managerName: department.managerName,
+                     phone: department.phone,
+                     email: department.email,
+                     isActive: department.isActive,
+                  }}
+               />
+            </CardBody>
+         </Card>
+      </div>
+   );
 }

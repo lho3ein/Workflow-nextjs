@@ -5,26 +5,18 @@ import PageHeader from "@/components/ui/PageHeader";
 import DepartmentForm from "@/components/forms/DepartmentForm";
 
 export default async function NewDepartmentPage() {
-  await requireManager();
+   await requireManager();
 
-  return (
-    <div>
-      <PageHeader
-        title="ایجاد دپارتمان"
-        subtitle="دپارتمان جدید به سازمان اضافه کنید"
-        icon="fa-solid fa-building-circle-plus"
-      />
+   return (
+      <div>
+         <PageHeader title="ایجاد دپارتمان" subtitle="دپارتمان جدید به سازمان اضافه کنید" icon="fa-solid fa-building-circle-plus" />
 
-      <Card className="max-w-2xl">
-        <CardHeader
-          title="مشخصات دپارتمان"
-          subtitle="فیلدهای ستاره‌دار الزامی هستند"
-          icon="fa-solid fa-clipboard-list"
-        />
-        <CardBody>
-          <DepartmentForm />
-        </CardBody>
-      </Card>
-    </div>
-  );
+         <Card className="max-w-2xl">
+            <CardHeader title="مشخصات دپارتمان" subtitle="فیلدهای ستاره‌دار الزامی هستند" icon="fa-solid fa-clipboard-list" />
+            <CardBody>
+               <DepartmentForm />
+            </CardBody>
+         </Card>
+      </div>
+   );
 }
