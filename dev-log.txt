@@ -1,0 +1,53 @@
+
+> workflow-nextjs@0.1.0 dev
+> next dev
+
+▲ Next.js 16.3.4 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://169.254.83.107:3000
+- Environments: .env
+✓ Ready in 820ms
+✓ Running next.config.ts took 55ms
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead.
+
+  To migrate automatically, run:
+  npx @next/codemod@canary middleware-to-proxy .
+
+  Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+
+⨯ Error: [next-auth]: `useSession` must be wrapped in a <SessionProvider />
+    at Navbar (src\components\layout\Navbar.tsx:9:39)
+   7 |
+   8 | export default function Navbar() {
+>  9 |   const { data: session } = useSession();
+     |                                       ^
+  10 |   const router = useRouter();
+  11 |
+  12 |   if (!session) return null; {
+  digest: '2996644720'
+}
+ GET /dashboard 500 in 903ms (next.js: 302ms, proxy.ts: 76ms, application-code: 526ms)
+⨯ Error: [next-auth]: `useSession` must be wrapped in a <SessionProvider />
+    at Navbar (src\components\layout\Navbar.tsx:9:39)
+   7 |
+   8 | export default function Navbar() {
+>  9 |   const { data: session } = useSession();
+     |                                       ^
+  10 |   const router = useRouter();
+  11 |
+  12 |   if (!session) return null; {
+  digest: '2894848592'
+}
+ GET /dashboard 500 in 221ms (next.js: 16ms, proxy.ts: 5ms, application-code: 200ms)
+ GET /dashboard 200 in 200ms (next.js: 31ms, proxy.ts: 3ms, application-code: 165ms)
+ GET /api/auth/session 200 in 1078ms (next.js: 1035ms, proxy.ts: 3ms, application-code: 40ms)
+ GET /api/auth/session 200 in 56ms (next.js: 18ms, proxy.ts: 5ms, application-code: 32ms)
+Register error: SyntaxError: Expected property name or '}' in JSON at position 1 (line 1 column 2)
+    at JSON.parse (<anonymous>)
+ POST /api/auth/register 500 in 119ms (next.js: 86ms, proxy.ts: 3ms, application-code: 29ms)
+ POST /api/auth/register 201 in 384ms (next.js: 5ms, proxy.ts: 3ms, application-code: 376ms)
+ GET /api/auth/csrf 200 in 33ms (next.js: 11ms, proxy.ts: 10ms, application-code: 12ms)
+ POST /api/auth/callback/credentials 302 in 348ms (next.js: 8ms, proxy.ts: 4ms, application-code: 336ms)
+ GET /dashboard 200 in 165ms (next.js: 6ms, proxy.ts: 2ms, application-code: 156ms)
+ GET /tasks 200 in 756ms (next.js: 469ms, proxy.ts: 2.0ms, application-code: 285ms)
+ GET /workflows 200 in 365ms (next.js: 229ms, proxy.ts: 2ms, application-code: 134ms)

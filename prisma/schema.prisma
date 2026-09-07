@@ -1,0 +1,170 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               Int              @id @default(autoincrement())
+  name             String
+  email            String           @unique
+  password         String
+  role             Role             @default(user)
+  departmentId     Int?
+  department       Department?      @relation(fields: [departmentId], references: [id], onDelete: SetNull)
+  isActive         Boolean          @default(true)
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  assignedTasks    Task[]           @relation("TaskAssignee")
+  createdWorkflows Workflow[]       @relation("WorkflowCreator")
+  createdTasks     Task[]           @relation("TaskCreator")
+  workflowSteps    WorkflowStep[]
+  assignments      TaskAssignment[]
+  comments         TaskComment[]
+}
+
+enum Role {
+  admin
+  manager
+  supervisor
+  user
+}
+
+model Department {
+  id          Int        @id @default(autoincrement())
+  name        String
+  description String?
+  managerName String?
+  phone       String?
+  email       String?
+  isActive    Boolean    @default(true)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  workflows   Workflow[]
+  users       User[]
+}
+
+model Workflow {
+  id           Int            @id @default(autoincrement())
+  title        String
+  description  String?
+  departmentId Int
+  department   Department     @relation(fields: [departmentId], references: [id], onDelete: Cascade)
+  createdById  Int
+  creator      User           @relation("WorkflowCreator", fields: [createdById], references: [id], onDelete: Cascade)
+  status       WorkflowStatus @default(active)
+  priority     Int            @default(1)
+  startDate    DateTime?
+  dueDate      DateTime?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  steps        WorkflowStep[]
+  tasks        Task[]
+}
+
+enum WorkflowStatus {
+  active
+  inactive
+  archived
+}
+
+model WorkflowStep {
+  id          Int        @id @default(autoincrement())
+  workflowId  Int
+  workflow    Workflow   @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  name        String
+  description String?
+  order       Int
+  assignedTo  Int?
+  assignee    User?      @relation(fields: [assignedTo], references: [id], onDelete: SetNull)
+  status      StepStatus @default(pending)
+  dueDate     DateTime?
+  completedAt DateTime?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  tasks       Task[]
+}
+
+enum StepStatus {
+  pending
+  in_progress
+  completed
+  rejected
+}
+
+model Task {
+  id             Int            @id @default(autoincrement())
+  title          String
+  description    String?
+  workflowId     Int
+  workflow       Workflow       @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  workflowStepId Int
+  workflowStep   WorkflowStep   @relation(fields: [workflowStepId], references: [id], onDelete: Cascade)
+  assignedTo     Int?
+  assignee       User?          @relation("TaskAssignee", fields: [assignedTo], references: [id], onDelete: SetNull)
+  createdById    Int
+  creator        User           @relation("TaskCreator", fields: [createdById], references: [id], onDelete: Cascade)
+  status         TaskStatus     @default(pending)
+  priority       TaskPriority   @default(medium)
+  dueDate        DateTime?
+  startedAt      DateTime?
+  completedAt    DateTime?
+  estimatedHours Int?
+  actualHours    Int?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  assignments    TaskAssignment[]
+  comments       TaskComment[]
+}
+
+enum TaskStatus {
+  pending
+  in_progress
+  completed
+  rejected
+  on_hold
+}
+
+enum TaskPriority {
+  low
+  medium
+  high
+  critical
+}
+
+model TaskAssignment {
+  id         Int            @id @default(autoincrement())
+  taskId     Int
+  task       Task           @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  userId     Int
+  user       User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role       AssignmentRole @default(assignee)
+  assignedAt DateTime       @default(now())
+  acceptedAt DateTime?
+  notes      String?
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+
+  @@unique([taskId, userId, role])
+}
+
+enum AssignmentRole {
+  assignee
+  reviewer
+  approver
+}
+
+model TaskComment {
+  id         Int      @id @default(autoincrement())
+  taskId     Int
+  task       Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  userId     Int
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  comment    String
+  isInternal Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
