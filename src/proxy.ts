@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { getToken } from "next-auth/jwt";
 
 const publicPaths = ["/login", "/register", "/api/auth"];
 
-export function proxy(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const token = request.cookies.get("next-auth.session-token")?.value;
+  const token = await getToken({ req: request });
 
   const isPublic =
     publicPaths.some((p) => pathname.startsWith(p)) || pathname === "/";
